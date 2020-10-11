@@ -1,0 +1,102 @@
+# ~/.config/sxhkd/sxhkdrc
+# Config file for the sxhkd hotkey daemon
+
+#
+# volume and mute controls
+#
+
+# toggle mute
+XF86AudioMute
+	pactl set-sink-mute 0 toggle
+
+# raise volume
+XF86AudioRaiseVolume
+	pactl set-sink-volume 0 +5%
+
+# lower volume
+XF86AudioLowerVolume
+	pactl set-sink-volume 0 -5%
+
+#
+# launch programs
+#
+
+# start terminal emulator (rxvt-unicode)
+super + Return
+	urxvt
+
+# start web-browser (firefox)
+super + i
+      	firefox
+	
+# open emacs
+super + e
+      	urxvt -e emacs
+
+# start xwinwrap to make the wallpaper a video of rain
+super + alt + {1,2,3,4,5,6,7,9,0}
+      	~/.config/bspwm/scripts/ambient-wallpaper.sh ~/Ambience/ambience_{1,2,3,4,5,6,7,8,9,10}.mp4
+
+#
+# sxhkd hotkeys
+#
+
+# make sxhkd reload its configuration files:
+super + Escape
+	pkill -USR1 -x sxhkd
+	
+#
+# bspwm hotkeys
+#
+
+# quit/restart bspwm
+super + alt + {q,r}
+	bspc {quit,wm -r}
+
+# close and kill
+super + {_,shift + }w
+	bspc node -{c,k}
+
+# swap the current node and the biggest node
+super + g
+	bspc node -s biggest
+
+#
+# state/flags
+#
+
+# set the window state
+super + {t,shift + t,s,shift + s}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+#
+# focus/swap
+#
+
+# focus the node in the given direction
+super + {_,shift + }{b,n,p,f}
+	bspc node -{f,s} {west,south,north,east}
+
+# focus the next/previous desktop in the current monitor
+#super + bracket{left,right}
+#	bspc desktop -f {prev,next}.local
+
+# focus or send to the given desktop
+super + {_,shift + }{1-3,4}
+	bspc {desktop -f,node -d} '^{1-3,4}'
+
+#
+# move/resize
+#
+
+# expand a window by moving one of its side outward
+super + alt + {b,n,p,f}
+	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+# contract a window by moving one of its side inward
+super + alt + shift + {b,n,p,f}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+#move a floating window
+super + {Left,Down,Up,Right}
+	bspc node -v {-30 0,0 30,0 -30,30 0}

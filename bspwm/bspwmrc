@@ -1,0 +1,48 @@
+#!/bin/bash
+# ~/.config/bspwm/bspwmrc
+# Config file for the bspwm window manager
+# Written as a bash script calling bsprc multiple times to set variables
+
+# Start sxhkd, the X hotkey daemon
+# The '-m 1' flag is so sxhkd knows to switch to dvorak when told
+sxhkd -m 1 &
+
+# Start the compton compositor
+compton &
+
+# Check if a secondary monitor exists:
+# Note that the names like LVDS-1 may be different on your machine
+# and can be found with xrandr --query
+if (bspc query -M | grep 0x00400004); then
+    # Remove the workspaces corresponding with the internal display
+    bspc monitor ^1 -r
+    # Use xrandr to disable the internal display
+    xrandr --output LVDS-1 --off
+    # Setup workspaces 1-4 on external display 
+    bspc monitor 0x00400004 -d I II III IV
+else
+    # Setup workspaces 1-4 on internal display
+    bspc monitor 0x00400002 -d I II III IV
+fi
+
+# Launch polybar
+~/.config/polybar/start.sh
+
+# Set up the window-placement scheme to spiral with second child
+bspc config automatic_scheme     second_child
+
+# Self explanatory, but more detail can me found in the man pages for bspc
+bspc config border_width         4
+bspc config window_gap           0
+bspc config normal_border_color	 "#999999"
+bspc config focused_border_color "#b5deea"
+
+bspc config split_ratio          0.52
+
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+# Set the root of the desktop
+# hsetroot -solid "#333333"
+hsetroot -center ~/Streaming/Wallpaper.jpg
+
